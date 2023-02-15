@@ -7,7 +7,9 @@ const App: Component = () => {
 
   return (
     <div class={styles.App}>
-      <button style={{position: 'absolute', left: 0}} onClick={() => setShowing(!isShowing())}>Toggle</button>
+      <button style={{ position: 'absolute', left: 0 }} onClick={() => setShowing(!isShowing())}>
+        Toggle
+      </button>
       <Show when={isShowing()}>
         <EmojiPicker />
       </Show>

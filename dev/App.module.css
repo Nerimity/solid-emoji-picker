@@ -1,4 +1,7 @@
-html, body, #app, .App {
+html,
+body,
+#app,
+.App {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6,4 +9,3 @@ html, body, #app, .App {
   width: 100%;
   background-color: #282c34;
 }
-
