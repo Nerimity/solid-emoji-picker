@@ -4,27 +4,25 @@ import categories from './categories.json'
 import emojis from './emojis.json'
 import { VirtualContainer } from '@minht11/solid-virtual-container'
 
-
-type Emoji = typeof emojis[0];
-const MAX_ROW = 10; 
+type Emoji = (typeof emojis)[0]
+const MAX_ROW = 10
 let currentIndex = -1
 
-let columnIndex = -1;
+let columnIndex = -1
 
 const virtualizedEmojis: (Emoji | string)[][] = []
 
 for (let index = 0; index < emojis.length; index++) {
   const emoji = emojis[index]
-  if (!emoji) continue;
+  if (!emoji) continue
   const categoryIndex = categories.findIndex(name => name === emoji.category)
   if (index % MAX_ROW === 0) {
-    columnIndex++;
+    columnIndex++
   }
 
   if (!virtualizedEmojis[columnIndex]) {
-    virtualizedEmojis[columnIndex] = [];
+    virtualizedEmojis[columnIndex] = []
   }
-
 
   if (currentIndex !== categoryIndex) {
     currentIndex = categoryIndex
@@ -33,7 +31,6 @@ for (let index = 0; index < emojis.length; index++) {
 
   virtualizedEmojis[columnIndex]!.push(emoji)
 }
-
 
 export interface EmojiPickerProps {}
 
@@ -137,11 +134,7 @@ const Emojis = () => {
         items={virtualizedEmojis}
         itemSize={{ height: 40 }}
       >
-        {props => (
-          <div style={props.style}>
-            test
-          </div>
-        )}
+        {props => <div style={props.style}>test</div>}
       </VirtualContainer>
     </div>
   )
