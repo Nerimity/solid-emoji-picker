@@ -4,19 +4,36 @@ import categories from './categories.json'
 import emojis from './emojis.json'
 import { VirtualContainer } from '@minht11/solid-virtual-container'
 
+
+type Emoji = typeof emojis[0];
+const MAX_ROW = 10; 
 let currentIndex = -1
 
-const virtualizedEmojis: any = []
+let columnIndex = -1;
+
+const virtualizedEmojis: (Emoji | string)[][] = []
 
 for (let index = 0; index < emojis.length; index++) {
   const emoji = emojis[index]
-  const categoryIndex = categories.findIndex(name => name === emoji?.category)
+  if (!emoji) continue;
+  const categoryIndex = categories.findIndex(name => name === emoji.category)
+  if (index % MAX_ROW === 0) {
+    columnIndex++;
+  }
+
+  if (!virtualizedEmojis[columnIndex]) {
+    virtualizedEmojis[columnIndex] = [];
+  }
+
+
   if (currentIndex !== categoryIndex) {
     currentIndex = categoryIndex
-    virtualizedEmojis.push({ categoryName: emoji?.category })
+    virtualizedEmojis[columnIndex]!.push(emoji.category)
   }
-  virtualizedEmojis.push(emoji)
+
+  virtualizedEmojis[columnIndex]!.push(emoji)
 }
+
 
 export interface EmojiPickerProps {}
 
@@ -118,22 +135,11 @@ const Emojis = () => {
       <VirtualContainer
         scrollTarget={scrollTargetElement}
         items={virtualizedEmojis}
-        itemSize={{ height: 40, width: 40 }}
-        // Calculate how many columns to show.
-        crossAxisCount={measurements =>
-          Math.floor(measurements.container.cross / measurements.itemSize.cross)
-        }
+        itemSize={{ height: 40 }}
       >
         {props => (
-          <div style={{ ...props.style }} class={props.item.categoryName ? 'width-full' : ''}>
-            <Switch>
-              <Match when={props.item.categoryName}>
-                <div>{props.item.categoryName}</div>
-              </Match>
-              <Match when={props.item.emoji}>
-                <Emoji emoji={props.item} />
-              </Match>
-            </Switch>
+          <div style={props.style}>
+            test
           </div>
         )}
       </VirtualContainer>
