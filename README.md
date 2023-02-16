@@ -43,9 +43,10 @@ onEmojiClicked: (Emoji) => void;
 ```
 ## Properties
 ```js
-primaryColor = "red"
+primaryColor = "#77a8f3"
 categories = string[]
 emojis = Emoji[]
+maxRow = 7
 ```
 
 ## Emoji

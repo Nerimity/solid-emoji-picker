@@ -18,13 +18,12 @@ import { VirtualContainer } from '@minht11/solid-virtual-container'
 
 export type Emoji = (typeof EmojisType)[0]
 
-const MAX_ROW = 8
 const SIZE = 40
 
 const [virtualizedEmojis, setVirtualizedEmojis] = createSignal<(Emoji | string)[][]>([])
 const [categoryPositions, setCategoryPositions] = createSignal<[number, string][]>([])
 
-function generateList(emojis: Emoji[], categories: string[]) {
+function generateList(emojis: Emoji[], categories: string[], MAX_ROW = 7) {
   let currentIndex = -1
   let columnIndex = 0
 
@@ -74,6 +73,7 @@ export interface EmojiPickerProps {
   categories?: string[]
   emojis?: Emoji[]
   onEmojiClick?: (emoji: Emoji) => void
+  maxRow?: number;
 }
 
 const EmojiPickerContainer = styled.div`
@@ -108,7 +108,7 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
 
   createEffect(
     on([() => props.emojis, () => props.categories], () => {
-      generateList(props.emojis!, props.categories!)
+      generateList(props.emojis!, props.categories!, props.maxRow)
 
       onCleanup(() => {
         setCategoryPositions([])
