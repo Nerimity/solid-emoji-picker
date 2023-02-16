@@ -4,13 +4,11 @@ import { Emoji, EmojiPicker } from '../src'
 import { emojis } from '../src/emojis'
 import { categories } from '../src/categories'
 
-
 const App: Component = () => {
   const [isShowing, setShowing] = createSignal(false)
 
-
   const onEmojiClick = (emoji: Emoji) => {
-    console.log(emoji);
+    console.log(emoji)
   }
 
   return (
@@ -19,7 +17,13 @@ const App: Component = () => {
         Toggle
       </button>
       <Show when={isShowing()}>
-        <EmojiPicker onEmojiClick={onEmojiClick} categories={categories} emojis={emojis} primaryColor='red' customHandler={(e) => e.emoji} />
+        <EmojiPicker
+          onEmojiClick={onEmojiClick}
+          categories={categories}
+          emojis={emojis}
+          primaryColor="red"
+          customHandler={e => e.emoji}
+        />
       </Show>
     </div>
   )
