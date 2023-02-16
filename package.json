@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0",
+  "version": "0.1.2",
   "name": "@nerimity/solid-emoji-picker",
   "description": "SolidJS Emoji Picker modal.",
   "license": "MIT",
@@ -23,24 +23,26 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "browser": {},
-  "exports": {
-    "solid": {
-      "development": "./dist/dev.jsx",
-      "import": "./dist/index.jsx"
-    },
-    "development": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/dev.js"
-      },
-      "require": "./dist/dev.cjs"
-    },
+"exports": {
+  "solid": {
+    "development": "./dist/dev.jsx",
+    "import": "./dist/index.jsx"
+  },
+  "development": {
     "import": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "default": "./dist/dev.js"
     },
-    "require": "./dist/index.cjs"
+    "require": "./dist/dev.cjs"
   },
+  "import": {
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
+  },
+  "require": "./dist/index.cjs",
+  "categories": "./dist/categories.js",
+  "emojis": "./dist/emojis.js"
+},
   "typesVersions": {},
   "scripts": {
     "dev": "vite serve dev",
