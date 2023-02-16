@@ -1,9 +1,17 @@
 import { Component, createSignal, Show } from 'solid-js'
 import styles from './App.module.css'
-import { EmojiPicker } from '../src'
+import { Emoji, EmojiPicker } from '../src'
+import { emojis } from '../src/emojis'
+import { categories } from '../src/categories'
+
 
 const App: Component = () => {
   const [isShowing, setShowing] = createSignal(false)
+
+
+  const onEmojiClick = (emoji: Emoji) => {
+    console.log(emoji);
+  }
 
   return (
     <div class={styles.App}>
@@ -11,7 +19,7 @@ const App: Component = () => {
         Toggle
       </button>
       <Show when={isShowing()}>
-        <EmojiPicker />
+        <EmojiPicker onEmojiClick={onEmojiClick} categories={categories} emojis={emojis} primaryColor='red' customHandler={(e) => e.emoji} />
       </Show>
     </div>
   )

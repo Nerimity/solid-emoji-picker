@@ -1,17 +1,17 @@
 {
   "version": "0.0.0",
-  "name": "{{name_of_lib}}",
-  "description": "{{desc_of_lib}}",
+  "name": "@nerimity/solid-emoji-picker",
+  "description": "SolidJS Emoji Picker modal.",
   "license": "MIT",
-  "author": "{{me}}",
+  "author": "Supertigerr",
   "contributors": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/{{me}}/{{name_of_lib}}.git"
+    "url": "git+https://github.com/Nerimity/solid-emoji-picker.git"
   },
-  "homepage": "https://github.com/{{me}}/{{name_of_lib}}#readme",
+  "homepage": "https://github.com/Nerimity/solid-emoji-picker#readme",
   "bugs": {
-    "url": "https://github.com/{{me}}/{{name_of_lib}}/issues"
+    "url": "https://github.com/Nerimity/solid-emoji-picker/issues"
   },
   "files": [
     "dist"
@@ -44,7 +44,7 @@
   "typesVersions": {},
   "scripts": {
     "dev": "vite serve dev",
-    "build": "tsup",
+    "build": "tsup src/index.tsx src/categories.ts src/emojis.ts",
     "test": "concurrently pnpm:test:*",
     "test:client": "vitest",
     "test:ssr": "pnpm run test:client --mode ssr",
@@ -77,5 +77,8 @@
   "dependencies": {
     "@minht11/solid-virtual-container": "^0.2.1",
     "solid-styled-components": "^0.28.5"
+  },
+  "directories": {
+    "test": "test"
   }
 }

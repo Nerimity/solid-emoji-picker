@@ -1,4 +1,4 @@
-[
+export const categories = [
   "Smileys & Emotion",
   "People & Body",
   "Animals & Nature",
