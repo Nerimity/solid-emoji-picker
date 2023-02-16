@@ -73,7 +73,7 @@ export interface EmojiPickerProps {
   categories?: string[]
   emojis?: Emoji[]
   onEmojiClick?: (emoji: Emoji) => void
-  maxRow?: number;
+  maxRow?: number
 }
 
 const EmojiPickerContainer = styled.div`
