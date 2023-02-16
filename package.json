@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.4",
   "name": "@nerimity/solid-emoji-picker",
   "description": "SolidJS Emoji Picker modal.",
   "license": "MIT",
@@ -19,34 +19,23 @@
   "private": false,
   "sideEffects": false,
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index/index.cjs",
+  "module": "./dist/index/index.js",
+  "types": "./dist/index/index.d.ts",
   "browser": {},
-"exports": {
-  "solid": {
-    "development": "./dist/dev.jsx",
-    "import": "./dist/index.jsx"
+  "typesVersions": {
+    "*": {
+      "./emojis": [
+        "./dist/emojis/index.d.ts"
+      ],
+      "./categories": [
+        "./dist/categories/index.d.ts"
+      ]
+    }
   },
-  "development": {
-    "import": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/dev.js"
-    },
-    "require": "./dist/dev.cjs"
-  },
-  "import": {
-    "types": "./dist/index.d.ts",
-    "default": "./dist/index.js"
-  },
-  "require": "./dist/index.cjs",
-  "categories": "./dist/categories.js",
-  "emojis": "./dist/emojis.js"
-},
-  "typesVersions": {},
   "scripts": {
     "dev": "vite serve dev",
-    "build": "tsup src/index.tsx src/categories.ts src/emojis.ts",
+    "build": "tsup",
     "test": "concurrently pnpm:test:*",
     "test:client": "vitest",
     "test:ssr": "pnpm run test:client --mode ssr",
@@ -82,5 +71,53 @@
   },
   "directories": {
     "test": "test"
+  },
+  "exports": {
+    ".": {
+      "solid": {
+        "development": "./dist/index/dev.jsx",
+        "import": "./dist/index/index.jsx"
+      },
+      "development": {
+        "import": {
+          "types": "./dist/index/index.d.ts",
+          "default": "./dist/index/dev.js"
+        },
+        "require": "./dist/index/dev.cjs"
+      },
+      "import": {
+        "types": "./dist/index/index.d.ts",
+        "default": "./dist/index/index.js"
+      },
+      "require": "./dist/index/index.cjs"
+    },
+    "./emojis": {
+      "development": {
+        "import": {
+          "types": "./dist/emojis/index.d.ts",
+          "default": "./dist/emojis/dev.js"
+        },
+        "require": "./dist/emojis/dev.cjs"
+      },
+      "import": {
+        "types": "./dist/emojis/index.d.ts",
+        "default": "./dist/emojis/index.js"
+      },
+      "require": "./dist/emojis/index.cjs"
+    },
+    "./categories": {
+      "development": {
+        "import": {
+          "types": "./dist/categories/index.d.ts",
+          "default": "./dist/categories/dev.js"
+        },
+        "require": "./dist/categories/dev.cjs"
+      },
+      "import": {
+        "types": "./dist/categories/index.d.ts",
+        "default": "./dist/categories/index.js"
+      },
+      "require": "./dist/categories/index.cjs"
+    }
   }
 }
