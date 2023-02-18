@@ -16,7 +16,7 @@ import type { emojis as EmojisType } from './emojis'
 
 import { VirtualContainer } from '@minht11/solid-virtual-container'
 
-export type Emoji = (typeof EmojisType)[0] & {index: number;}
+export type Emoji = (typeof EmojisType)[0] & { index: number }
 
 const SIZE = 40
 
@@ -29,7 +29,6 @@ function generateList(emojis: Emoji[], categories: string[], MAX_ROW = 7) {
 
   let tempVirtualizedEmojis: (Emoji | string)[][] = []
   let tempCategoryPositions: [number, string][] = []
-
 
   for (let index = 0; index < emojis.length; index++) {
     const emoji = emojis[index]
@@ -54,7 +53,7 @@ function generateList(emojis: Emoji[], categories: string[], MAX_ROW = 7) {
       tempVirtualizedEmojis[columnIndex] = []
     }
 
-    tempVirtualizedEmojis[columnIndex]!.push({...emoji, index})
+    tempVirtualizedEmojis[columnIndex]!.push({ ...emoji, index })
     if (tempVirtualizedEmojis[columnIndex]?.length! > MAX_ROW) {
       columnIndex++
     }
@@ -77,7 +76,7 @@ export interface EmojiPickerProps {
   emojis?: Emoji[]
   onEmojiClick?: (emoji: Emoji) => void
   maxRow?: number
-  spriteUrl: string;
+  spriteUrl: string
 }
 
 const EmojiPickerContainer = styled.div`
@@ -142,11 +141,7 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
     <ThemeProvider theme={theme}>
       <EmojiPickerContainer>
         <Categories scrollElement={scrollElement()} selectedCategory={category()} />
-        <Emojis
-          onEmojiClick={props.onEmojiClick}
-          mainProps={props}
-          ref={setScrollElement}
-        />
+        <Emojis onEmojiClick={props.onEmojiClick} mainProps={props} ref={setScrollElement} />
       </EmojiPickerContainer>
     </ThemeProvider>
   )
@@ -190,7 +185,8 @@ const CategoryContainer = styled.button<{ selected: boolean }>`
 
     }
   
-  `: ''}
+  `
+      : ''}
 `
 
 const Categories = (props: {
@@ -230,7 +226,7 @@ const emojisContainerStyles = css`
   flex: 1;
 `
 
-const EmojiContainer = styled.div<{url?: string}>`
+const EmojiContainer = styled.div<{ url?: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -255,30 +251,29 @@ const Title = styled.div`
   color: rgba(255, 255, 255, 0.7);
 `
 
-const ROWS = 40;
+const ROWS = 40
 const Emojis = (props: {
   ref: any
   onEmojiClick?: (emoji: Emoji) => void
   mainProps: EmojiPickerProps
 }) => {
   const onClick = props.onEmojiClick
-  const spriteUrl = props.mainProps.spriteUrl;
+  const spriteUrl = props.mainProps.spriteUrl
 
   const Emoji = (props: { emoji: Emoji; children?: JSXElement }) => {
-
-    const currentColumn = Math.floor(props.emoji.index / ROWS);
-    const currentRow = props.emoji.index % ROWS;
+    const currentColumn = Math.floor(props.emoji.index / ROWS)
+    const currentRow = props.emoji.index % ROWS
 
     return (
       <EmojiContainer title={props.emoji.short_names[0]} onclick={() => onClick?.(props.emoji)}>
         <div
           style={{
-            "background-image": `url(${spriteUrl})`,
-            "height": "30px",
-            "width": "30px",
-            "background-size": "1200px",
-            "background-repeat": "no-repeat",
-            "background-position": `${-(currentRow * 30)}px ${-(currentColumn * 30)}px`
+            'background-image': `url(${spriteUrl})`,
+            height: '30px',
+            width: '30px',
+            'background-size': '1200px',
+            'background-repeat': 'no-repeat',
+            'background-position': `${-(currentRow * 30)}px ${-(currentColumn * 30)}px`,
           }}
         />
       </EmojiContainer>
@@ -286,13 +281,11 @@ const Emojis = (props: {
   }
 
   let scrollTargetElement: HTMLDivElement | undefined
-  
+
   onMount(() => {
     props.ref(scrollTargetElement)
   })
-  
-  
-  
+
   // VirtualContainer does not seem to work with styled components
   return (
     <div class={emojisContainerStyles} ref={scrollTargetElement}>
@@ -310,7 +303,7 @@ const Emojis = (props: {
                     <Title>{emoji as string}</Title>
                   </Match>
                   <Match when={typeof emoji !== 'string'}>
-                    <Emoji emoji={emoji as Emoji}/>
+                    <Emoji emoji={emoji as Emoji} />
                   </Match>
                 </Switch>
               )}
