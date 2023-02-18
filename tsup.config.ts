@@ -13,7 +13,7 @@ export default defineConfig(
     {
       entry: 'src/categories.ts',
       devEntry: true,
-    },
+    }
   ],
   {
     // Enable this to write export conditions to package.json

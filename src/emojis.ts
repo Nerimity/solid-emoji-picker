@@ -790,11 +790,6 @@ export const emojis = [
     category: 'Smileys & Emotion',
   },
   {
-    emoji: '👁️‍🗨️',
-    short_names: ['eye_speech_bubble'],
-    category: 'Smileys & Emotion',
-  },
-  {
     emoji: '🗨️',
     short_names: ['left_speech_bubble'],
     category: 'Smileys & Emotion',

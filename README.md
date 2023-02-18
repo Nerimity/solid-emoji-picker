@@ -29,7 +29,7 @@ import { categories } from 'solid-emoji-picker/categories';
 const App = () => {
   return (
     <div>
-      <EmojiPicker categories={categories} emojis={emojis} />
+      <EmojiPicker spriteUrl="/emojiSprites.png" categories={categories} emojis={emojis} />
     </div>
   )
 }
@@ -47,6 +47,7 @@ primaryColor = "#77a8f3"
 categories = string[]
 emojis = Emoji[]
 maxRow = 7
+spriteUrl = "/emojiSprites.png" // located in dev/public/
 ```
 
 ## Emoji

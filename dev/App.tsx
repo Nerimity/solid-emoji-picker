@@ -22,7 +22,7 @@ const App: Component = () => {
           categories={categories}
           emojis={emojis}
           primaryColor="red"
-          customHandler={e => e.emoji}
+          spriteUrl="/emojiSprites.png"
         />
       </Show>
     </div>
