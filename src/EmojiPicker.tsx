@@ -9,6 +9,7 @@ import {
   JSXElement,
   onCleanup,
   on,
+  JSX,
 } from 'solid-js'
 import { css, styled, ThemeProvider } from 'solid-styled-components'
 
@@ -77,6 +78,8 @@ export interface EmojiPickerProps {
   onEmojiClick?: (emoji: Emoji) => void
   maxRow?: number
   spriteUrl: string
+  class?: string;
+  style?: JSX.CSSProperties;
 }
 
 const EmojiPickerContainer = styled.div`
@@ -139,7 +142,7 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
 
   return (
     <ThemeProvider theme={theme}>
-      <EmojiPickerContainer>
+      <EmojiPickerContainer class={props.class} style={props.style}>
         <Categories scrollElement={scrollElement()} selectedCategory={category()} />
         <Emojis onEmojiClick={props.onEmojiClick} mainProps={props} ref={setScrollElement} />
       </EmojiPickerContainer>
