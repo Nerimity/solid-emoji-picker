@@ -78,8 +78,8 @@ export interface EmojiPickerProps {
   onEmojiClick?: (emoji: Emoji) => void
   maxRow?: number
   spriteUrl: string
-  class?: string;
-  style?: JSX.CSSProperties;
+  class?: string
+  style?: JSX.CSSProperties
 }
 
 const EmojiPickerContainer = styled.div`
