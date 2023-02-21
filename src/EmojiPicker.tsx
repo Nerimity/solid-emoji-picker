@@ -22,8 +22,8 @@ export type Emoji = (typeof EmojisType)[0] & { index: number }
 const SIZE = 40
 
 const [virtualizedEmojis, setVirtualizedEmojis] = createSignal<(Emoji | string)[][]>([])
-const [categoryPositions, setCategoryPositions] = createSignal<[number, string][]>([]);
-const [categoryEmojis, setCategoryEmojis] = createSignal<Emoji[]>([]);
+const [categoryPositions, setCategoryPositions] = createSignal<[number, string][]>([])
+const [categoryEmojis, setCategoryEmojis] = createSignal<Emoji[]>([])
 
 function generateList(emojis: Emoji[], categories: string[], MAX_ROW = 7) {
   let categoryIndex = -1
@@ -50,10 +50,10 @@ function generateList(emojis: Emoji[], categories: string[], MAX_ROW = 7) {
         }
         tempVirtualizedEmojis[columnIndex] = []
       }
-      
-      tempVirtualizedEmojis[columnIndex]!.push(emoji.category);
+
+      tempVirtualizedEmojis[columnIndex]!.push(emoji.category)
       tempCategoryEmojis.push({ ...emoji, index })
-    
+
       columnIndex++
 
       tempVirtualizedEmojis[columnIndex] = []
@@ -149,7 +149,11 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
   return (
     <ThemeProvider theme={theme}>
       <EmojiPickerContainer class={props.class} style={props.style}>
-        <Categories mainProps={props} scrollElement={scrollElement()} selectedCategory={category()} />
+        <Categories
+          mainProps={props}
+          scrollElement={scrollElement()}
+          selectedCategory={category()}
+        />
         <Emojis onEmojiClick={props.onEmojiClick} mainProps={props} ref={setScrollElement} />
       </EmojiPickerContainer>
     </ThemeProvider>
@@ -203,26 +207,21 @@ const Categories = (props: {
   selectedCategory?: string
   mainProps: EmojiPickerProps
 }) => {
-
-  const spriteUrl = props.mainProps.spriteUrl;
+  const spriteUrl = props.mainProps.spriteUrl
 
   const scrollTo = (name: string) => {
     const position = categoryPositions().find(position => position[1] === name)?.[0]
     if (position === undefined) return
     props.scrollElement?.scrollTo({ top: position })
   }
-  const Category = (props: { index: number, name: string; selectedCategory?: string }) => {
+  const Category = (props: { index: number; name: string; selectedCategory?: string }) => {
     return (
       <CategoryContainer
         onclick={() => scrollTo(props.name)}
         selected={props.selectedCategory === props.name}
         title={props.name}
       >
-      <EmojiImage
-          size={20}
-          index={categoryEmojis()[props.index]?.index!}
-          url={spriteUrl}
-        />
+        <EmojiImage size={20} index={categoryEmojis()[props.index]?.index!} url={spriteUrl} />
       </CategoryContainer>
     )
   }
@@ -230,7 +229,9 @@ const Categories = (props: {
   return (
     <CategoriesContainer>
       <For each={categoryPositions()}>
-        {([, name], index) => <Category index={index()} selectedCategory={props.selectedCategory} name={name} />}
+        {([, name], index) => (
+          <Category index={index()} selectedCategory={props.selectedCategory} name={name} />
+        )}
       </For>
     </CategoriesContainer>
   )
@@ -281,11 +282,7 @@ const Emojis = (props: {
   const Emoji = (props: { emoji: Emoji; children?: JSXElement }) => {
     return (
       <EmojiContainer title={props.emoji.short_names[0]} onclick={() => onClick?.(props.emoji)}>
-        <EmojiImage
-
-          index={props.emoji.index}
-          url={spriteUrl}
-        />
+        <EmojiImage index={props.emoji.index} url={spriteUrl} />
       </EmojiContainer>
     )
   }
@@ -325,12 +322,11 @@ const Emojis = (props: {
   )
 }
 
-function EmojiImage(props: {size?: number, url: string, index: number}) {
+function EmojiImage(props: { size?: number; url: string; index: number }) {
   const currentColumn = Math.floor(props.index / ROWS)
-  const currentRow = props.index % ROWS;
+  const currentRow = props.index % ROWS
 
-
-  props.size = props.size || 30;
+  props.size = props.size || 30
 
   return (
     <div
@@ -338,7 +334,7 @@ function EmojiImage(props: {size?: number, url: string, index: number}) {
         'background-image': `url(${props.url})`,
         height: props.size + 'px',
         width: props.size + 'px',
-        'background-size': (40 * props.size) + 'px',
+        'background-size': 40 * props.size + 'px',
         'background-repeat': 'no-repeat',
         'background-position': `${-(currentRow * props.size)}px ${-(currentColumn * props.size)}px`,
       }}
