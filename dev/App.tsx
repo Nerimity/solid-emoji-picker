@@ -4,17 +4,53 @@ import { Emoji, EmojiPicker } from '../src'
 import { emojis } from '../src/emojis'
 
 interface CustomEmoji {
-  id: string;
-  name: string;
-  url: string;
-  category: {id: string; name: string, url: string};
+  id: string
+  name: string
+  url: string
+  category: { id: string; name: string; url: string }
 }
 
 const customEmojis: CustomEmoji[] = [
-  { id: "1", name: "lol", url: "https://cdn.nerimity.com/emojis/1376182012704104448.webp", category: {id: "1", name: "lol", url: "https://cdn.nerimity.com/emojis/1376182012704104448.webp"} },
-  { id: "2", name: "cat", url: "https://cdn.nerimity.com/emojis/1376182055343398912.webp", category: {id: "1", name: "lol", url: "https://cdn.nerimity.com/emojis/1376182012704104448.webp"} },
-  { id: "3", name: "dog", url: "https://cdn.nerimity.com/emojis/1376182012704104448.webp", category: {id: "2", name: "lol1", url: "https://cdn.nerimity.com/emojis/1376182012704104448.webp"} },
-  { id: "3", name: "dog", url: "https://cdn.nerimity.com/emojis/1376182012704104448.webp", category: {id: "3", name: "lol1", url: "https://cdn.nerimity.com/emojis/1376182012704104448.webp"} },
+  {
+    id: '1',
+    name: 'lol',
+    url: 'https://cdn.nerimity.com/emojis/1376182012704104448.webp',
+    category: {
+      id: '1',
+      name: 'lol',
+      url: 'https://cdn.nerimity.com/emojis/1376182012704104448.webp',
+    },
+  },
+  {
+    id: '2',
+    name: 'cat',
+    url: 'https://cdn.nerimity.com/emojis/1376182055343398912.webp',
+    category: {
+      id: '1',
+      name: 'lol',
+      url: 'https://cdn.nerimity.com/emojis/1376182012704104448.webp',
+    },
+  },
+  {
+    id: '3',
+    name: 'dog',
+    url: 'https://cdn.nerimity.com/emojis/1376182012704104448.webp',
+    category: {
+      id: '2',
+      name: 'lol1',
+      url: 'https://cdn.nerimity.com/emojis/1376182012704104448.webp',
+    },
+  },
+  {
+    id: '3',
+    name: 'dog',
+    url: 'https://cdn.nerimity.com/emojis/1376182012704104448.webp',
+    category: {
+      id: '3',
+      name: 'lol1',
+      url: 'https://cdn.nerimity.com/emojis/1376182012704104448.webp',
+    },
+  },
 ]
 
 const App: Component = () => {
