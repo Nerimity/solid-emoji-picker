@@ -34,7 +34,7 @@ export interface CustomEmojiCategory {
   id: string
   name: string
   url?: string
-  customElement?: (size: number) => JSXElement;
+  customElement?: (size: number) => JSXElement
   type?: 'category'
 }
 
@@ -331,7 +331,13 @@ const Categories = (props: {
         title={props.category?.name}
       >
         <Show when={props.category.customElement}>{props.category.customElement!(25)}</Show>
-        <Show when={!props.category.customElement}><EmojiImage size={25} index={props.category.index} url={props.category.url || spriteUrl} /></Show>
+        <Show when={!props.category.customElement}>
+          <EmojiImage
+            size={25}
+            index={props.category.index}
+            url={props.category.url || spriteUrl}
+          />
+        </Show>
       </CategoryContainer>
     )
   }
@@ -443,7 +449,11 @@ const Emojis = (props: {
                       <Show when={!(emoji as CustomEmojiCategory).customElement}>
                         <EmojiImage
                           size={15}
-                          index={(emoji as CustomEmojiCategory).url ? undefined : (emoji as Category).index}
+                          index={
+                            (emoji as CustomEmojiCategory).url
+                              ? undefined
+                              : (emoji as Category).index
+                          }
                           url={(emoji as CustomEmojiCategory).url || spriteUrl}
                         />
                       </Show>

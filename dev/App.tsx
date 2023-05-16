@@ -1,8 +1,7 @@
 import { Component, createSignal, Show } from 'solid-js'
 import styles from './App.module.css'
-import {  CustomEmoji, EmojiPicker, EmojiWithIndex } from '../src'
+import { CustomEmoji, EmojiPicker, EmojiWithIndex } from '../src'
 import { emojis } from '../src/emojis'
-
 
 const customEmojis: CustomEmoji[] = [
   {
@@ -16,7 +15,6 @@ const customEmojis: CustomEmoji[] = [
       customElement(size) {
         return <div>Test</div>
       },
-
     },
   },
   {
