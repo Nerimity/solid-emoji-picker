@@ -12,31 +12,65 @@ import {
   JSX,
 } from 'solid-js'
 import { css, styled, ThemeProvider } from 'solid-styled-components'
-
-import type { emojis as EmojisType } from './emojis'
-
 import { VirtualContainer } from '@minht11/solid-virtual-container'
 
-export type Emoji = (typeof EmojisType)[0] & { index: number }
+export interface Emoji {
+  emoji: string;
+  short_names: string[];
+  category: string;
+}
+
+
+export type EmojiWithIndex = Emoji & { index: number };
+
+export interface CustomEmoji {
+  id: string;
+  name: string;
+  url: string;
+  category: CustomEmojiCategory;
+};
+
+export interface CustomEmojiCategory {
+  id: string,
+  name: string,
+  url: string
+  type?: 'category'
+}
+
+export interface Category {
+  name: string,
+  index: number
+  type?: 'category'
+}
+
 
 const SIZE = 40
 
-const [virtualizedEmojis, setVirtualizedEmojis] = createSignal<(Emoji | string)[][]>([])
-const [categoryPositions, setCategoryPositions] = createSignal<[number, string][]>([])
-const [categoryEmojis, setCategoryEmojis] = createSignal<Emoji[]>([])
+const [virtualizedEmojis, setVirtualizedEmojis] = createSignal<(EmojiWithIndex | CustomEmoji | CustomEmojiCategory | Category)[][]>([])
+const [categoryPositions, setCategoryPositions] = createSignal<[number, CustomEmojiCategory | Category][]>([])
 
-function generateList(emojis: Emoji[], categories: string[], MAX_ROW = 7) {
+
+
+function generateCustomEmojiList(emojis: CustomEmoji[], MAX_ROW = 7) {
+  let tempVirtualizedEmojis: (CustomEmoji | CustomEmojiCategory)[][] = [];
+  let tempCategoryPositions: [number, CustomEmojiCategory][] = []
+  let tempCategories: CustomEmojiCategory[] = [];
+
   let categoryIndex = -1
   let columnIndex = 0
 
-  let tempVirtualizedEmojis: (Emoji | string)[][] = []
-  let tempCategoryPositions: [number, string][] = []
-  let tempCategoryEmojis: Emoji[] = []
-
   for (let index = 0; index < emojis.length; index++) {
     const emoji = emojis[index]
-    if (!emoji) continue
-    const tempCategoryIndex = categories.findIndex(name => name === emoji.category)
+    if (!emoji) continue;
+    const category = { ...emoji.category, type: 'category' as 'category' };
+
+    let tempCategoryIndex = tempCategories.findIndex(t => t.id === category.id);
+
+    if (tempCategoryIndex < 0) {
+      tempCategories.push(category);
+      tempCategoryIndex = tempCategories.length - 1;
+    }
+
 
     if (!tempVirtualizedEmojis[columnIndex]) {
       tempVirtualizedEmojis[columnIndex] = []
@@ -51,8 +85,61 @@ function generateList(emojis: Emoji[], categories: string[], MAX_ROW = 7) {
         tempVirtualizedEmojis[columnIndex] = []
       }
 
-      tempVirtualizedEmojis[columnIndex]!.push(emoji.category)
-      tempCategoryEmojis.push({ ...emoji, index })
+      tempVirtualizedEmojis[columnIndex]!.push(category)
+      tempCategoryPositions.push([(tempVirtualizedEmojis.length - 1) * SIZE, category])
+
+
+      columnIndex++
+
+      tempVirtualizedEmojis[columnIndex] = []
+    }
+
+    tempVirtualizedEmojis[columnIndex]!.push(emoji)
+    if (tempVirtualizedEmojis[columnIndex]?.length! > MAX_ROW) {
+      columnIndex++
+    }
+  }
+
+
+  setCategoryPositions(tempCategoryPositions)
+  setVirtualizedEmojis(tempVirtualizedEmojis);
+
+}
+
+function generateList(emojis: Emoji[], MAX_ROW = 7) {
+  let categoryIndex = -1
+  let columnIndex = 0
+
+  let tempVirtualizedEmojis: (EmojiWithIndex | Category)[][] = []
+  let tempCategoryPositions: [number, Category][] = []
+  let tempCategories: string[] = [];
+
+  for (let index = 0; index < emojis.length; index++) {
+    const emoji = emojis[index]
+    if (!emoji) continue
+    let tempCategoryIndex = tempCategories.indexOf(emoji.category);
+
+    if (tempCategoryIndex < 0) {
+      tempCategories.push(emoji.category);
+      tempCategoryIndex = tempCategories.length - 1;
+    }
+
+    if (!tempVirtualizedEmojis[columnIndex]) {
+      tempVirtualizedEmojis[columnIndex] = []
+    }
+
+    if (categoryIndex !== tempCategoryIndex) {
+      categoryIndex = tempCategoryIndex
+      if (index !== 0) {
+        if (tempVirtualizedEmojis[columnIndex]?.length) {
+          columnIndex++
+        }
+        tempVirtualizedEmojis[columnIndex] = []
+      }
+
+      const category = { name: emoji.category, index, type: 'category' as const };
+      tempVirtualizedEmojis[columnIndex]!.push(category);
+      tempCategoryPositions.push([((virtualizedEmojis().length) + (tempVirtualizedEmojis.length - 1)) * SIZE, category]);
 
       columnIndex++
 
@@ -65,23 +152,18 @@ function generateList(emojis: Emoji[], categories: string[], MAX_ROW = 7) {
     }
   }
 
-  for (let index = 0; index < tempVirtualizedEmojis.length; index++) {
-    const emoji = tempVirtualizedEmojis[index]?.[0]
-    if (typeof emoji === 'string') {
-      tempCategoryPositions.push([index * SIZE, emoji])
-    }
-  }
-  setVirtualizedEmojis(tempVirtualizedEmojis)
-  setCategoryPositions(tempCategoryPositions)
-  setCategoryEmojis(tempCategoryEmojis)
+  setVirtualizedEmojis([...virtualizedEmojis(), ...tempVirtualizedEmojis])
+  setCategoryPositions([...categoryPositions(), ...tempCategoryPositions])
 }
+
+
+
 
 export interface EmojiPickerProps {
   primaryColor?: string
-  customHandler?: (emoji: Emoji) => JSXElement
-  categories?: string[]
   emojis?: Emoji[]
-  onEmojiClick?: (emoji: Emoji) => void
+  customEmojis?: CustomEmoji[]
+  onEmojiClick?: (emoji: EmojiWithIndex | CustomEmoji) => void
   maxRow?: number
   spriteUrl: string
   class?: string
@@ -90,11 +172,10 @@ export interface EmojiPickerProps {
 
 const EmojiPickerContainer = styled.div`
   display: flex;
-  flex-direction: column;
   background: rgba(0, 0, 0, 0.8);
   border-radius: 8px;
-  height: 300px;
-  width: 350px;
+  height: 350px;
+  width: 400px;
   border: solid 1px rgba(255, 255, 255, 0.3);
   color: white;
   overflow: hidden;
@@ -111,16 +192,21 @@ function debounce(func: any, wait: number) {
 }
 
 const currentCategory = (scrollTop: number) => {
-  return [...categoryPositions()].reverse().find(position => scrollTop >= position[0])?.[1]
+  return [...categoryPositions()].reverse().find(position => {
+
+    return scrollTop >= position[0];
+  })?.[1]
 }
 
 export const EmojiPicker: Component<EmojiPickerProps> = props => {
   let [scrollElement, setScrollElement] = createSignal<HTMLDivElement | undefined>()
-  let [category, setCategory] = createSignal<string>()
+  let [category, setCategory] = createSignal<CustomEmojiCategory | Category>()
 
   createEffect(
-    on([() => props.emojis, () => props.categories], () => {
-      generateList(props.emojis!, props.categories!, props.maxRow)
+    on([() => props.emojis], () => {
+
+      props.customEmojis?.length && generateCustomEmojiList(props.customEmojis!, props.maxRow)
+      props.emojis?.length && generateList(props.emojis!, props.maxRow)
 
       onCleanup(() => {
         setCategoryPositions([])
@@ -129,7 +215,9 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
     }),
   )
 
+
   createEffect(() => {
+
     scrollElement()?.addEventListener('scroll', onScroll)
     setCategory(currentCategory(scrollElement()?.scrollTop!))
 
@@ -162,8 +250,17 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
 
 const CategoriesContainer = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 3px;
   margin: 5px;
+  overflow: auto;
+  background-color: rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 2px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const CategoryContainer = styled.button<{ selected: boolean }>`
@@ -175,10 +272,10 @@ const CategoryContainer = styled.button<{ selected: boolean }>`
   border: none;
 
   aspect-ratio: 1/1;
-  flex: 1;
   border-radius: 8px;
   background: transparent;
   cursor: pointer;
+  flex-shrink: 0;
 
   &:hover {
     background: rgba(255, 255, 255, 0.2);
@@ -204,33 +301,48 @@ const CategoryContainer = styled.button<{ selected: boolean }>`
 
 const Categories = (props: {
   scrollElement: HTMLDivElement | undefined
-  selectedCategory?: string
+  selectedCategory?: CustomEmojiCategory | Category
   mainProps: EmojiPickerProps
 }) => {
   const spriteUrl = props.mainProps.spriteUrl
 
-  const scrollTo = (name: string) => {
-    const position = categoryPositions().find(position => position[1] === name)?.[0]
+  const scrollTo = (category: CustomEmojiCategory | Category) => {
+    const position = categoryPositions().find(position => {
+      if (category.id) {
+        return category.id === position[1].id;
+      }
+      return category.name === position[1].name;
+    })?.[0]
     if (position === undefined) return
     props.scrollElement?.scrollTo({ top: position })
   }
-  const Category = (props: { index: number; name: string; selectedCategory?: string }) => {
+
+  const Category = (props: { index: number; category: { name: string, index: string } | CustomEmojiCategory; selectedCategory?: string }) => {
+
+    const selected = () => {
+      if (props.selectedCategory?.id) {
+        return props.selectedCategory?.id === props.category?.id;
+      };
+      return props.selectedCategory?.name === props.category?.name;
+    }
+
     return (
       <CategoryContainer
-        onclick={() => scrollTo(props.name)}
-        selected={props.selectedCategory === props.name}
-        title={props.name}
+        class="categoryContainer"
+        onclick={() => scrollTo(props.category)}
+        selected={selected()}
+        title={props.category?.name}
       >
-        <EmojiImage size={20} index={categoryEmojis()[props.index]?.index!} url={spriteUrl} />
+        <EmojiImage size={25} index={props.category.index} url={props.category.url || spriteUrl} />
       </CategoryContainer>
     )
   }
 
   return (
-    <CategoriesContainer>
+    <CategoriesContainer class="categoriesContainer">
       <For each={categoryPositions()}>
-        {([, name], index) => (
-          <Category index={index()} selectedCategory={props.selectedCategory} name={name} />
+        {([, category], index) => (
+          <Category index={index()} selectedCategory={props.selectedCategory} category={category} />
         )}
       </For>
     </CategoriesContainer>
@@ -265,9 +377,16 @@ const EmojiContainer = styled.div<{ url?: string }>`
 
 const Title = styled.div`
   display: flex;
+  gap: 5px;
   align-items: center;
-  margin-left: 5px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.12);
+  flex: 1;
+  padding-left: 6px;
+  border-radius: 6px;
+  height: 25px;
+  align-self: center;
+  margin-right: 5px;
 `
 
 const ROWS = 40
@@ -279,10 +398,10 @@ const Emojis = (props: {
   const onClick = props.onEmojiClick
   const spriteUrl = props.mainProps.spriteUrl
 
-  const Emoji = (props: { emoji: Emoji; children?: JSXElement }) => {
+  const Emoji = (props: { emoji: EmojiWithIndex; children?: JSXElement }) => {
     return (
-      <EmojiContainer title={props.emoji.short_names[0]} onclick={() => onClick?.(props.emoji)}>
-        <EmojiImage index={props.emoji.index} url={spriteUrl} />
+      <EmojiContainer class="emojiContainer" title={props.emoji.name || props.emoji.short_names[0]} onclick={() => onClick?.(props.emoji)}>
+        <EmojiImage index={props.emoji.url ? undefined : props.emoji.index} url={props.emoji.url || spriteUrl} />
       </EmojiContainer>
     )
   }
@@ -295,7 +414,7 @@ const Emojis = (props: {
 
   // VirtualContainer does not seem to work with styled components
   return (
-    <div class={emojisContainerStyles} ref={scrollTargetElement}>
+    <div class={emojisContainerStyles} classList={{ "emojisContainer": true }} ref={scrollTargetElement}>
       <VirtualContainer
         scrollTarget={scrollTargetElement}
         items={virtualizedEmojis()}
@@ -306,11 +425,16 @@ const Emojis = (props: {
             <For each={props.item}>
               {(emoji, i) => (
                 <Switch>
-                  <Match when={typeof emoji === 'string'}>
-                    <Title>{emoji as string}</Title>
+
+                  <Match when={emoji.type === 'category'}>
+
+                    <Title class='title'>
+                      <EmojiImage size={15} index={emoji.url ? undefined : emoji.index} url={emoji.url || spriteUrl} />
+                      <span>{emoji.name}</span>
+                    </Title>
                   </Match>
-                  <Match when={typeof emoji !== 'string'}>
-                    <Emoji emoji={emoji as Emoji} />
+                  <Match when={emoji.type !== 'category'}>
+                    <Emoji emoji={emoji as EmojiWithIndex} />
                   </Match>
                 </Switch>
               )}
@@ -322,22 +446,29 @@ const Emojis = (props: {
   )
 }
 
-function EmojiImage(props: { size?: number; url: string; index: number }) {
-  const currentColumn = Math.floor(props.index / ROWS)
-  const currentRow = props.index % ROWS
+function EmojiImage(props: { size?: number; url: string; index?: number }) {
 
-  props.size = props.size || 30
+
+  let styles = () => {
+    props.size = props.size || 30
+    const properties: JSX.CSSProperties = {
+      'background-image': `url(${props.url})`,
+      height: props.size + 'px',
+      width: props.size + 'px',
+      'background-size': 'contain',
+      'background-repeat': 'no-repeat',
+    }
+    if (props.index !== undefined) {
+      const currentRow = props.index % ROWS;
+      const currentColumn = Math.floor(props.index / ROWS)
+      properties['background-position'] = `${-(currentRow * props.size)}px ${-(currentColumn * props.size)}px`;
+      properties['background-size'] = 40 * props.size + 'px'
+
+    }
+    return properties;
+  }
 
   return (
-    <div
-      style={{
-        'background-image': `url(${props.url})`,
-        height: props.size + 'px',
-        width: props.size + 'px',
-        'background-size': 40 * props.size + 'px',
-        'background-repeat': 'no-repeat',
-        'background-position': `${-(currentRow * props.size)}px ${-(currentColumn * props.size)}px`,
-      }}
-    />
+    <div style={styles()} class='emojiImage' classList={{customEmojiImage: props.index === undefined}} />
   )
 }
