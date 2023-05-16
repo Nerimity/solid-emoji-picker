@@ -299,7 +299,7 @@ const Categories = (props: {
   const spriteUrl = props.mainProps.spriteUrl
 
   const scrollTo = (category: CustomEmojiCategory & Category) => {
-    const position = categoryPositions().find((position) => {
+    const position = categoryPositions().find(position => {
       if (category.id) {
         return category.id === (position[1] as CustomEmojiCategory).id
       }
@@ -337,7 +337,11 @@ const Categories = (props: {
     <CategoriesContainer class="categoriesContainer">
       <For each={categoryPositions()}>
         {([, category], index) => (
-          <Category index={index()} selectedCategory={props.selectedCategory as Category & CustomEmojiCategory} category={category as Category & CustomEmojiCategory} />
+          <Category
+            index={index()}
+            selectedCategory={props.selectedCategory as Category & CustomEmojiCategory}
+            category={category as Category & CustomEmojiCategory}
+          />
         )}
       </For>
     </CategoriesContainer>
@@ -435,7 +439,9 @@ const Emojis = (props: {
                     <Title class="title">
                       <EmojiImage
                         size={15}
-                        index={(emoji as CustomEmojiCategory).url ? undefined : (emoji as Category).index}
+                        index={
+                          (emoji as CustomEmojiCategory).url ? undefined : (emoji as Category).index
+                        }
                         url={(emoji as CustomEmojiCategory).url || spriteUrl}
                       />
                       <span>{(emoji as CustomEmojiCategory).name}</span>

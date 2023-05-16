@@ -1,6 +1,6 @@
 import { Component, createSignal, Show } from 'solid-js'
 import styles from './App.module.css'
-import {  EmojiPicker, EmojiWithIndex } from '../src'
+import { EmojiPicker, EmojiWithIndex } from '../src'
 import { emojis } from '../src/emojis'
 
 interface CustomEmoji {
