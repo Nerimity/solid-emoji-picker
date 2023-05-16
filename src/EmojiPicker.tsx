@@ -298,10 +298,10 @@ const Categories = (props: {
 }) => {
   const spriteUrl = props.mainProps.spriteUrl
 
-  const scrollTo = (category: CustomEmojiCategory | Category) => {
-    const position = categoryPositions().find(position => {
+  const scrollTo = (category: CustomEmojiCategory & Category) => {
+    const position = categoryPositions().find((position) => {
       if (category.id) {
-        return category.id === position[1].id
+        return category.id === (position[1] as CustomEmojiCategory).id
       }
       return category.name === position[1].name
     })?.[0]
@@ -311,8 +311,8 @@ const Categories = (props: {
 
   const Category = (props: {
     index: number
-    category: { name: string; index: string } | CustomEmojiCategory
-    selectedCategory?: string
+    category: Category & CustomEmojiCategory
+    selectedCategory?: CustomEmojiCategory & Category
   }) => {
     const selected = () => {
       if (props.selectedCategory?.id) {
@@ -337,7 +337,7 @@ const Categories = (props: {
     <CategoriesContainer class="categoriesContainer">
       <For each={categoryPositions()}>
         {([, category], index) => (
-          <Category index={index()} selectedCategory={props.selectedCategory} category={category} />
+          <Category index={index()} selectedCategory={props.selectedCategory as Category & CustomEmojiCategory} category={category as Category & CustomEmojiCategory} />
         )}
       </For>
     </CategoriesContainer>
@@ -387,13 +387,13 @@ const Title = styled.div`
 const ROWS = 40
 const Emojis = (props: {
   ref: any
-  onEmojiClick?: (emoji: Emoji) => void
+  onEmojiClick?: (emoji: EmojiWithIndex & CustomEmoji) => void
   mainProps: EmojiPickerProps
 }) => {
   const onClick = props.onEmojiClick
   const spriteUrl = props.mainProps.spriteUrl
 
-  const Emoji = (props: { emoji: EmojiWithIndex; children?: JSXElement }) => {
+  const Emoji = (props: { emoji: EmojiWithIndex & CustomEmoji; children?: JSXElement }) => {
     return (
       <EmojiContainer
         class="emojiContainer"
@@ -429,20 +429,20 @@ const Emojis = (props: {
         {props => (
           <div style={{ ...props.style, display: 'flex', width: '100%' }}>
             <For each={props.item}>
-              {(emoji, i) => (
+              {emoji => (
                 <Switch>
-                  <Match when={emoji.type === 'category'}>
+                  <Match when={(emoji as Category).type === 'category'}>
                     <Title class="title">
                       <EmojiImage
                         size={15}
-                        index={emoji.url ? undefined : emoji.index}
-                        url={emoji.url || spriteUrl}
+                        index={(emoji as CustomEmojiCategory).url ? undefined : (emoji as Category).index}
+                        url={(emoji as CustomEmojiCategory).url || spriteUrl}
                       />
-                      <span>{emoji.name}</span>
+                      <span>{(emoji as CustomEmojiCategory).name}</span>
                     </Title>
                   </Match>
-                  <Match when={emoji.type !== 'category'}>
-                    <Emoji emoji={emoji as EmojiWithIndex} />
+                  <Match when={(emoji as CustomEmojiCategory).type !== 'category'}>
+                    <Emoji emoji={emoji as CustomEmoji & EmojiWithIndex} />
                   </Match>
                 </Switch>
               )}

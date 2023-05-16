@@ -1,6 +1,6 @@
 import { Component, createSignal, Show } from 'solid-js'
 import styles from './App.module.css'
-import { Emoji, EmojiPicker } from '../src'
+import {  EmojiPicker, EmojiWithIndex } from '../src'
 import { emojis } from '../src/emojis'
 
 interface CustomEmoji {
@@ -56,7 +56,7 @@ const customEmojis: CustomEmoji[] = [
 const App: Component = () => {
   const [isShowing, setShowing] = createSignal(false)
 
-  const onEmojiClick = (emoji: Emoji) => {
+  const onEmojiClick = (emoji: EmojiWithIndex | CustomEmoji) => {
     console.log(emoji)
   }
 

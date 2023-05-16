@@ -27,9 +27,6 @@
     "*": {
       "./emojis": [
         "./dist/emojis/index.d.ts"
-      ],
-      "./categories": [
-        "./dist/categories/index.d.ts"
       ]
     }
   },
@@ -104,20 +101,6 @@
         "default": "./dist/emojis/index.js"
       },
       "require": "./dist/emojis/index.cjs"
-    },
-    "./categories": {
-      "development": {
-        "import": {
-          "types": "./dist/categories/index.d.ts",
-          "default": "./dist/categories/dev.js"
-        },
-        "require": "./dist/categories/dev.cjs"
-      },
-      "import": {
-        "types": "./dist/categories/index.d.ts",
-        "default": "./dist/categories/index.js"
-      },
-      "require": "./dist/categories/index.cjs"
     }
   }
 }
