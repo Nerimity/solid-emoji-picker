@@ -9,10 +9,6 @@ export default defineConfig(
     {
       entry: 'src/emojis.ts',
       devEntry: true,
-    },
-    {
-      entry: 'src/categories.ts',
-      devEntry: true,
     }
   ],
   {
