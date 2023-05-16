@@ -1,14 +1,8 @@
 import { Component, createSignal, Show } from 'solid-js'
 import styles from './App.module.css'
-import {  EmojiPicker, EmojiWithIndex } from '../src'
+import {  CustomEmoji, EmojiPicker, EmojiWithIndex } from '../src'
 import { emojis } from '../src/emojis'
 
-interface CustomEmoji {
-  id: string
-  name: string
-  url: string
-  category: { id: string; name: string; url: string }
-}
 
 const customEmojis: CustomEmoji[] = [
   {
@@ -19,6 +13,10 @@ const customEmojis: CustomEmoji[] = [
       id: '1',
       name: 'lol',
       url: 'https://cdn.nerimity.com/emojis/1376182012704104448.webp',
+      customElement(size) {
+        return <div>Test</div>
+      },
+
     },
   },
   {
