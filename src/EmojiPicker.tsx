@@ -200,14 +200,9 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
   let [category, setCategory] = createSignal<CustomEmojiCategory | Category>()
 
   createEffect(
-    on([() => props.emojis], () => {
+    on([() => props.emojis, () => props?.customEmojis, () => props.maxRow], () => {
       props.customEmojis?.length && generateCustomEmojiList(props.customEmojis!, props.maxRow)
       props.emojis?.length && generateList(props.emojis!, props.maxRow)
-
-      onCleanup(() => {
-        setCategoryPositions([])
-        setVirtualizedEmojis([])
-      })
     }),
   )
 
