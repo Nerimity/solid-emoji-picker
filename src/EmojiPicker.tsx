@@ -11,6 +11,7 @@ import {
   on,
   JSX,
   Show,
+  batch,
 } from 'solid-js'
 import { css, styled, ThemeProvider } from 'solid-styled-components'
 import { VirtualContainer } from '@minht11/solid-virtual-container'
@@ -201,8 +202,12 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
 
   createEffect(
     on([() => props.emojis, () => props?.customEmojis, () => props.maxRow], () => {
-      props.customEmojis?.length && generateCustomEmojiList(props.customEmojis!, props.maxRow)
-      props.emojis?.length && generateList(props.emojis!, props.maxRow)
+      batch(() => {
+        setCategoryPositions([]);
+        setVirtualizedEmojis([]);
+        props.customEmojis?.length && generateCustomEmojiList(props.customEmojis!, props.maxRow)
+        props.emojis?.length && generateList(props.emojis!, props.maxRow)
+      })
     }),
   )
 
