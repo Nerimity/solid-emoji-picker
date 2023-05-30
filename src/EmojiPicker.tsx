@@ -203,8 +203,8 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
   createEffect(
     on([() => props.emojis, () => props?.customEmojis, () => props.maxRow], () => {
       batch(() => {
-        setCategoryPositions([]);
-        setVirtualizedEmojis([]);
+        setCategoryPositions([])
+        setVirtualizedEmojis([])
         props.customEmojis?.length && generateCustomEmojiList(props.customEmojis!, props.maxRow)
         props.emojis?.length && generateList(props.emojis!, props.maxRow)
       })
