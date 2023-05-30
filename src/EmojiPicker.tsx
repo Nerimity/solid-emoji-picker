@@ -202,7 +202,6 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
   const [scrollElement, setScrollElement] = createSignal<HTMLDivElement | undefined>()
   const [category, setCategory] = createSignal<CustomEmojiCategory | Category>()
 
-
   createRenderEffect(
     on([() => props.emojis, () => props?.customEmojis, () => props.maxRow], () => {
       setCategoryPositions([])
@@ -444,7 +443,7 @@ const Emojis = (props: {
       classList={{ emojisContainer: true }}
       ref={scrollTargetElement}
     >
-      <SearchBar/>
+      <SearchBar />
       <VirtualContainer
         scrollTarget={scrollTargetElement}
         items={virtualizedEmojis()}
@@ -563,10 +562,6 @@ function HoveredEmojiDetails(props: {
   )
 }
 
-
-
-
-
 const SearchBarContainer = styled('div')`
   display: flex;
   gap: 10px;
@@ -578,7 +573,7 @@ const SearchBarContainer = styled('div')`
   border-radius: 6px;
   width: calc(100% - 5px);
   z-index: 1;
-  
+
   input {
     padding: 10px;
     background-color: transparent;
@@ -590,10 +585,9 @@ const SearchBarContainer = styled('div')`
 `
 
 function SearchBar(props: {}) {
-
   return (
     <SearchBarContainer>
-      <input type="text" placeholder='Search' />
+      <input type="text" placeholder="Search" />
     </SearchBarContainer>
   )
 }

@@ -63,7 +63,7 @@ const App: Component = () => {
       </button>
       <Show when={isShowing()}>
         <EmojiPicker
-          style={{height: "400px"}}
+          style={{ height: '400px' }}
           onEmojiClick={onEmojiClick}
           customEmojis={customEmojis}
           emojis={emojis}
