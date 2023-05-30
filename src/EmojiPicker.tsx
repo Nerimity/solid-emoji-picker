@@ -12,6 +12,8 @@ import {
   JSX,
   Show,
   batch,
+  useTransition,
+  createRenderEffect,
 } from 'solid-js'
 import { css, styled, ThemeProvider } from 'solid-styled-components'
 import { VirtualContainer } from '@minht11/solid-virtual-container'
@@ -197,19 +199,23 @@ const currentCategory = (scrollTop: number) => {
 }
 
 export const EmojiPicker: Component<EmojiPickerProps> = props => {
-  let [scrollElement, setScrollElement] = createSignal<HTMLDivElement | undefined>()
-  let [category, setCategory] = createSignal<CustomEmojiCategory | Category>()
+  const [scrollElement, setScrollElement] = createSignal<HTMLDivElement | undefined>()
+  const [category, setCategory] = createSignal<CustomEmojiCategory | Category>()
 
-  createEffect(
+
+  createRenderEffect(
     on([() => props.emojis, () => props?.customEmojis, () => props.maxRow], () => {
-      batch(() => {
-        setCategoryPositions([])
-        setVirtualizedEmojis([])
-        props.customEmojis?.length && generateCustomEmojiList(props.customEmojis!, props.maxRow)
-        props.emojis?.length && generateList(props.emojis!, props.maxRow)
-      })
+      setCategoryPositions([])
+      setVirtualizedEmojis([])
+      props.customEmojis?.length && generateCustomEmojiList(props.customEmojis!, props.maxRow)
+      props.emojis?.length && generateList(props.emojis!, props.maxRow)
     }),
   )
+
+  onCleanup(() => {
+    setCategoryPositions([])
+    setVirtualizedEmojis([])
+  })
 
   createEffect(() => {
     scrollElement()?.addEventListener('scroll', onScroll)
@@ -438,6 +444,7 @@ const Emojis = (props: {
       classList={{ emojisContainer: true }}
       ref={scrollTargetElement}
     >
+      <SearchBar/>
       <VirtualContainer
         scrollTarget={scrollTargetElement}
         items={virtualizedEmojis()}
@@ -553,5 +560,40 @@ function HoveredEmojiDetails(props: {
         <div class="category">{props.emoji.category.name || props.emoji.category}</div>
       </div>
     </HoveredEmojiDetailsContainer>
+  )
+}
+
+
+
+
+
+const SearchBarContainer = styled('div')`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background-color: rgba(99, 99, 99, 0.4);
+  backdrop-filter: blur(20px);
+  border-radius: 6px;
+  width: calc(100% - 5px);
+  z-index: 1;
+  
+  input {
+    padding: 10px;
+    background-color: transparent;
+    color: white;
+    border: none;
+    width: 100%;
+    outline: none;
+  }
+`
+
+function SearchBar(props: {}) {
+
+  return (
+    <SearchBarContainer>
+      <input type="text" placeholder='Search' />
+    </SearchBarContainer>
   )
 }
