@@ -405,7 +405,9 @@ const Emojis = (props: {
 }) => {
   const onClick = props.onEmojiClick
   const spriteUrl = props.mainProps.spriteUrl
-  const [hoveredEmoji, setHoveredEmoji] = createSignal<CustomEmoji & EmojiWithIndex | undefined>(undefined);
+  const [hoveredEmoji, setHoveredEmoji] = createSignal<(CustomEmoji & EmojiWithIndex) | undefined>(
+    undefined,
+  )
 
   const Emoji = (props: { emoji: EmojiWithIndex & CustomEmoji; children?: JSXElement }) => {
     return (
@@ -440,7 +442,6 @@ const Emojis = (props: {
         scrollTarget={scrollTargetElement}
         items={virtualizedEmojis()}
         itemSize={{ height: SIZE }}
-
       >
         {props => (
           <div style={{ ...props.style, display: 'flex', width: '100%' }}>
@@ -476,7 +477,7 @@ const Emojis = (props: {
         )}
       </VirtualContainer>
       <Show when={hoveredEmoji()}>
-        <HoveredEmojiDetails mainProps={props.mainProps} emoji={hoveredEmoji()!}/>
+        <HoveredEmojiDetails mainProps={props.mainProps} emoji={hoveredEmoji()!} />
       </Show>
     </div>
   )
@@ -512,8 +513,7 @@ function EmojiImage(props: { size?: number; url: string; index?: number }) {
   )
 }
 
-
-const HoveredEmojiDetailsContainer = styled("div")`
+const HoveredEmojiDetailsContainer = styled('div')`
   display: flex;
   gap: 10px;
   align-items: center;
@@ -526,29 +526,31 @@ const HoveredEmojiDetailsContainer = styled("div")`
   width: calc(100% - 15px);
 
   .details {
-
   }
   .name {
     font-size: 14px;
-
   }
   .category {
     font-size: 12px;
     opacity: 0.6;
-
   }
-`;
+`
 
-
-function HoveredEmojiDetails(props: {mainProps: EmojiPickerProps; emoji: CustomEmoji & EmojiWithIndex}) {
+function HoveredEmojiDetails(props: {
+  mainProps: EmojiPickerProps
+  emoji: CustomEmoji & EmojiWithIndex
+}) {
   const spriteUrl = props.mainProps.spriteUrl
 
   return (
     <HoveredEmojiDetailsContainer>
-      <EmojiImage index={props.emoji.url ? undefined : props.emoji.index} url={props.emoji.url || spriteUrl} />
+      <EmojiImage
+        index={props.emoji.url ? undefined : props.emoji.index}
+        url={props.emoji.url || spriteUrl}
+      />
       <div class="details">
         <div class="name">{props.emoji.name || props.emoji.short_names[0]}</div>
-        <div class='category'>{props.emoji.category.name || props.emoji.category}</div>
+        <div class="category">{props.emoji.category.name || props.emoji.category}</div>
       </div>
     </HoveredEmojiDetailsContainer>
   )
