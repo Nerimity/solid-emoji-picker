@@ -1,5 +1,5 @@
 {
-  "version": "0.2.3",
+  "version": "0.3.3",
   "name": "@nerimity/solid-emoji-picker",
   "description": "SolidJS Emoji Picker modal.",
   "license": "MIT",
@@ -64,6 +64,7 @@
   "packageManager": "pnpm@7.22.0",
   "dependencies": {
     "@minht11/solid-virtual-container": "^0.2.1",
+    "match-sorter": "^6.3.1",
     "solid-styled-components": "^0.28.5"
   },
   "directories": {
