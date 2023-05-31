@@ -290,7 +290,7 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
     if (emoji) return emoji
     const customEmoji = props.customEmojis?.find(e => e.name === shortName)
     if (customEmoji) return customEmoji
-  })
+  }).filter(e => e);
 
   createRenderEffect(
     on([() => props.emojis, () => props?.customEmojis, () => props.maxRow, search], () => {

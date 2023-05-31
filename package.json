@@ -1,5 +1,5 @@
 {
-  "version": "0.4.3",
+  "version": "0.4.4",
   "name": "@nerimity/solid-emoji-picker",
   "description": "SolidJS Emoji Picker modal.",
   "license": "MIT",
@@ -25,7 +25,7 @@
   "browser": {},
   "typesVersions": {
     "*": {
-      "./emojis": [
+      "emojis": [
         "./dist/emojis/index.d.ts"
       ]
     }
