@@ -367,6 +367,7 @@ const CategoriesContainer = styled.div`
   background-color: rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   padding: 2px;
+  z-index: 1;
 
   &::-webkit-scrollbar {
     display: none;
