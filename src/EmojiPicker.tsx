@@ -285,12 +285,14 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
 
   const emojisWithIndex = props.emojis?.map((e, i) => ({ ...e, index: i }))
 
-  const recentEmojis = getHistory().map(shortName => {
-    const emoji = emojisWithIndex?.find(e => e.short_names[0] === shortName)
-    if (emoji) return emoji
-    const customEmoji = props.customEmojis?.find(e => e.name === shortName)
-    if (customEmoji) return customEmoji
-  }).filter(e => e);
+  const recentEmojis = getHistory()
+    .map(shortName => {
+      const emoji = emojisWithIndex?.find(e => e.short_names[0] === shortName)
+      if (emoji) return emoji
+      const customEmoji = props.customEmojis?.find(e => e.name === shortName)
+      if (customEmoji) return customEmoji
+    })
+    .filter(e => e)
 
   createRenderEffect(
     on([() => props.emojis, () => props?.customEmojis, () => props.maxRow, search], () => {
