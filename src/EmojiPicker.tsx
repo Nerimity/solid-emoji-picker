@@ -65,11 +65,9 @@ function generateCustomEmojiList(emojis: CustomEmoji[], MAX_ROW = 7) {
   let categoryIndex = -1
   let columnIndex = 0
 
-
   for (let index = 0; index < emojis.length; index++) {
     const emoji = emojis[index]
-    if (!emoji) continue;
-
+    if (!emoji) continue
 
     const category = { ...emoji.category, type: 'category' as 'category' }
 
@@ -120,8 +118,6 @@ function generateList(emojis: EmojiWithIndex[], MAX_ROW = 7) {
   let tempCategoryPositions: [number, Category][] = []
   let tempCategories: string[] = []
 
-
-
   for (let index = 0; index < emojis.length; index++) {
     const emoji = emojis[index]
     if (!emoji) continue
@@ -167,15 +163,21 @@ function generateList(emojis: EmojiWithIndex[], MAX_ROW = 7) {
   setCategoryPositions([...categoryPositions(), ...tempCategoryPositions])
 }
 
-
-function generateSearchList(emojis: EmojiWithIndex[], customEmojis: CustomEmoji[], search: string, MAX_ROW = 7)  {
-  const searchedEmojis = matchSorter([...customEmojis, ...emojis], search, { keys: ["short_names.*", "name"] });
+function generateSearchList(
+  emojis: EmojiWithIndex[],
+  customEmojis: CustomEmoji[],
+  search: string,
+  MAX_ROW = 7,
+) {
+  const searchedEmojis = matchSorter([...customEmojis, ...emojis], search, {
+    keys: ['short_names.*', 'name'],
+  })
 
   let columnIndex = 0
   let tempVirtualizedEmojis: (EmojiWithIndex | CustomEmoji)[][] = []
 
   for (let i = 0; i < searchedEmojis.length; i++) {
-    const emoji = searchedEmojis[i];
+    const emoji = searchedEmojis[i]
 
     if (!tempVirtualizedEmojis[columnIndex]) {
       tempVirtualizedEmojis[columnIndex] = []
@@ -184,10 +186,9 @@ function generateSearchList(emojis: EmojiWithIndex[], customEmojis: CustomEmoji[
     tempVirtualizedEmojis[columnIndex]!.push(emoji!)
     if (tempVirtualizedEmojis[columnIndex]?.length! > MAX_ROW) {
       columnIndex++
-    }    
+    }
   }
   setVirtualizedEmojis(tempVirtualizedEmojis)
-
 }
 
 export interface EmojiPickerProps {
@@ -231,13 +232,19 @@ const currentCategory = (scrollTop: number) => {
 export const EmojiPicker: Component<EmojiPickerProps> = props => {
   const [scrollElement, setScrollElement] = createSignal<HTMLDivElement | undefined>()
   const [category, setCategory] = createSignal<CustomEmojiCategory | Category>()
-  const [search, setSearch] = createSignal("");
+  const [search, setSearch] = createSignal('')
 
-  const emojisWithIndex = props.emojis?.map((e, i) => ({...e, index: i}))
+  const emojisWithIndex = props.emojis?.map((e, i) => ({ ...e, index: i }))
 
   createRenderEffect(
     on([() => props.emojis, () => props?.customEmojis, () => props.maxRow, search], () => {
-      if (search()) return generateSearchList(emojisWithIndex || [], props.customEmojis || [], search(), props.maxRow)
+      if (search())
+        return generateSearchList(
+          emojisWithIndex || [],
+          props.customEmojis || [],
+          search(),
+          props.maxRow,
+        )
       setCategoryPositions([])
       setVirtualizedEmojis([])
       props.customEmojis?.length && generateCustomEmojiList(props.customEmojis!, props.maxRow)
@@ -259,7 +266,6 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
     })
   })
 
-
   const onScroll = debounce(() => {
     setCategory(currentCategory(scrollElement()?.scrollTop!))
   }, 50)
@@ -272,12 +278,18 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
     <ThemeProvider theme={theme}>
       <EmojiPickerContainer class={props.class} style={props.style}>
         <Categories
-          onCategoryClick={() => setSearch("")}
+          onCategoryClick={() => setSearch('')}
           mainProps={props}
           scrollElement={scrollElement()}
           selectedCategory={category()}
         />
-        <Emojis onSearchInput={setSearch} searchValue={search()} onEmojiClick={props.onEmojiClick} mainProps={props} ref={setScrollElement} />
+        <Emojis
+          onSearchInput={setSearch}
+          searchValue={search()}
+          onEmojiClick={props.onEmojiClick}
+          mainProps={props}
+          ref={setScrollElement}
+        />
       </EmojiPickerContainer>
     </ThemeProvider>
   )
@@ -329,19 +341,19 @@ const CategoryContainer = styled.button<{ selected: boolean }>`
       border-radius: 8px;
     }
   `
-  : ''}
+      : ''}
 `
 
 const Categories = (props: {
   scrollElement: HTMLDivElement | undefined
   selectedCategory?: CustomEmojiCategory | Category
-  onCategoryClick():void;
+  onCategoryClick(): void
   mainProps: EmojiPickerProps
 }) => {
   const spriteUrl = props.mainProps.spriteUrl
 
   const scrollTo = (category: CustomEmojiCategory & Category) => {
-    props.onCategoryClick();
+    props.onCategoryClick()
     const position = categoryPositions().find(position => {
       if (category.id) {
         return category.id === (position[1] as CustomEmojiCategory).id
@@ -443,7 +455,7 @@ const Emojis = (props: {
   ref: any
   onEmojiClick?: (emoji: EmojiWithIndex & CustomEmoji) => void
   onSearchInput: (value: string) => void
-  searchValue: string;
+  searchValue: string
   mainProps: EmojiPickerProps
 }) => {
   const onClick = props.onEmojiClick
@@ -569,7 +581,7 @@ const HoveredEmojiDetailsContainer = styled('div')`
   backdrop-filter: blur(20px);
   border-radius: 8px;
   width: calc(100% - 15px);
-  border: solid 1px rgba(255,255,255,.2);
+  border: solid 1px rgba(255, 255, 255, 0.2);
 
   .details {
   }
@@ -595,7 +607,7 @@ function HoveredEmojiDetails(props: {
         url={props.emoji.url || spriteUrl}
       />
       <div class="details">
-        <div class="name">{props.emoji.name || props.emoji.short_names.join(" ")}</div>
+        <div class="name">{props.emoji.name || props.emoji.short_names.join(' ')}</div>
         <div class="category">{props.emoji.category.name || props.emoji.category}</div>
       </div>
     </HoveredEmojiDetailsContainer>
@@ -613,7 +625,7 @@ const SearchBarContainer = styled('div')`
   border-radius: 6px;
   width: calc(100% - 5px);
   z-index: 1;
-  border: solid 1px rgba(255,255,255,.2);
+  border: solid 1px rgba(255, 255, 255, 0.2);
   border-bottom: solid 2px ${props => props.theme?.primary};
   input {
     padding: 10px;
@@ -625,10 +637,15 @@ const SearchBarContainer = styled('div')`
   }
 `
 
-function SearchBar(props: {value: string; onText(value: string): void}) {
+function SearchBar(props: { value: string; onText(value: string): void }) {
   return (
     <SearchBarContainer>
-      <input type="text" value={props.value} placeholder="Search" onInput={(event) => props.onText(event.target.value)} />
+      <input
+        type="text"
+        value={props.value}
+        placeholder="Search"
+        onInput={event => props.onText(event.target.value)}
+      />
     </SearchBarContainer>
   )
 }
