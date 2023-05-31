@@ -19,9 +19,19 @@ import { css, styled, ThemeProvider } from 'solid-styled-components'
 import { VirtualContainer } from '@minht11/solid-virtual-container'
 import { matchSorter } from 'match-sorter'
 
-
 function RecentIcon() {
-  return <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="white"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"/></svg>
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="20px"
+      viewBox="0 0 24 24"
+      width="20px"
+      fill="white"
+    >
+      <path d="M0 0h24v24H0V0z" fill="none" />
+      <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z" />
+    </svg>
+  )
 }
 
 export interface Emoji {
@@ -198,21 +208,20 @@ function generateSearchList(
   setVirtualizedEmojis(tempVirtualizedEmojis)
 }
 
-
 function generateRecentEmojiList(emojis: (EmojiWithIndex | CustomEmoji)[], MAX_ROW = 7) {
   let columnIndex = 0
   let tempVirtualizedEmojis: (EmojiWithIndex | CustomEmoji | CustomEmojiCategory)[][] = []
-  
+
   const category: CustomEmojiCategory = {
-    id: "recent",
-    name: "Recent Emojis",
+    id: 'recent',
+    name: 'Recent Emojis',
     type: 'category',
-    customElement: () => <RecentIcon/>
+    customElement: () => <RecentIcon />,
   }
-  
-    setCategoryPositions([[0, category]])
-  tempVirtualizedEmojis[columnIndex] = [category];
-  columnIndex++;
+
+  setCategoryPositions([[0, category]])
+  tempVirtualizedEmojis[columnIndex] = [category]
+  columnIndex++
   for (let i = 0; i < emojis.length; i++) {
     const emoji = emojis[i]
 
@@ -228,15 +237,13 @@ function generateRecentEmojiList(emojis: (EmojiWithIndex | CustomEmoji)[], MAX_R
   setVirtualizedEmojis(tempVirtualizedEmojis)
 }
 
-
-
 export interface EmojiPickerProps {
   primaryColor?: string
   emojis?: Emoji[]
   customEmojis?: CustomEmoji[]
   onEmojiClick?: (emoji: EmojiWithIndex | CustomEmoji) => void
   maxRow?: number
-  maxRecent?: number;
+  maxRecent?: number
   spriteUrl: string
   class?: string
   style?: JSX.CSSProperties
@@ -253,7 +260,7 @@ const EmojiPickerContainer = styled.div`
   color: white;
   overflow: hidden;
   z-index: 1;
-`;
+`
 
 function debounce(func: any, wait: number) {
   let timeout: number
@@ -279,12 +286,11 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
   const emojisWithIndex = props.emojis?.map((e, i) => ({ ...e, index: i }))
 
   const recentEmojis = getHistory().map(shortName => {
-    const emoji = emojisWithIndex?.find(e => e.short_names[0] === shortName);
-    if (emoji) return emoji;
-    const customEmoji = props.customEmojis?.find(e => e.name === shortName);
-    if (customEmoji) return customEmoji;
+    const emoji = emojisWithIndex?.find(e => e.short_names[0] === shortName)
+    if (emoji) return emoji
+    const customEmoji = props.customEmojis?.find(e => e.name === shortName)
+    if (customEmoji) return customEmoji
   })
-
 
   createRenderEffect(
     on([() => props.emojis, () => props?.customEmojis, () => props.maxRow, search], () => {
@@ -297,7 +303,8 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
         )
       setCategoryPositions([])
       setVirtualizedEmojis([])
-      recentEmojis.length && generateRecentEmojiList(recentEmojis as (EmojiWithIndex | CustomEmoji)[], props.maxRow)
+      recentEmojis.length &&
+        generateRecentEmojiList(recentEmojis as (EmojiWithIndex | CustomEmoji)[], props.maxRow)
       props.customEmojis?.length && generateCustomEmojiList(props.customEmojis!, props.maxRow)
       emojisWithIndex?.length && generateList(emojisWithIndex!, props.maxRow)
     }),
@@ -326,8 +333,8 @@ export const EmojiPicker: Component<EmojiPickerProps> = props => {
   }
 
   const onEmojiClick = (emoji: EmojiWithIndex & CustomEmoji) => {
-    addToHistory(emoji.name || emoji.short_names[0]!, props.maxRecent || 10);
-    props.onEmojiClick?.(emoji);
+    addToHistory(emoji.name || emoji.short_names[0]!, props.maxRecent || 10)
+    props.onEmojiClick?.(emoji)
   }
 
   return (
@@ -706,17 +713,15 @@ function SearchBar(props: { value: string; onText(value: string): void }) {
   )
 }
 
-
-
 export function addToHistory(name: string, maxRecent: number) {
-  let history = getHistory();
+  let history = getHistory()
   // remove if already exists
-  history = history.filter(hn => hn !== name);
+  history = history.filter(hn => hn !== name)
 
-  history.unshift(name);
-  localStorage["nerimity-solid-emoji-pane"] = JSON.stringify(history.splice(0, maxRecent));
+  history.unshift(name)
+  localStorage['nerimity-solid-emoji-pane'] = JSON.stringify(history.splice(0, maxRecent))
 }
 
 export function getHistory(): string[] {
-  return JSON.parse(localStorage["nerimity-solid-emoji-pane"] || "[]")
+  return JSON.parse(localStorage['nerimity-solid-emoji-pane'] || '[]')
 }
