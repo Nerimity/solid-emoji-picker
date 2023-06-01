@@ -704,8 +704,8 @@ const SearchBarContainer = styled('div')`
 `
 
 function SearchBar(props: { value: string; onText(value: string): void }) {
-  let inputRef: HTMLInputElement | undefined;
-  onMount(() => inputRef?.focus());
+  let inputRef: HTMLInputElement | undefined
+  onMount(() => inputRef?.focus())
   return (
     <SearchBarContainer>
       <input
