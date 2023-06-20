@@ -247,6 +247,7 @@ export interface EmojiPickerProps {
   spriteUrl: string
   class?: string
   style?: JSX.CSSProperties
+  focusOnMount?: boolean
 }
 
 const EmojiPickerContainer = styled.div`
@@ -559,7 +560,7 @@ const Emojis = (props: {
       classList={{ emojisContainer: true }}
       ref={scrollTargetElement}
     >
-      <SearchBar onText={props.onSearchInput} value={props.searchValue} />
+      <SearchBar autoFocus={props.mainProps.focusOnMount} onText={props.onSearchInput} value={props.searchValue} />
       <VirtualContainer
         scrollTarget={scrollTargetElement}
         items={virtualizedEmojis()}
@@ -703,9 +704,12 @@ const SearchBarContainer = styled('div')`
   }
 `
 
-function SearchBar(props: { value: string; onText(value: string): void }) {
+function SearchBar(props: { autoFocus?: boolean; value: string; onText(value: string): void }) {
   let inputRef: HTMLInputElement | undefined
-  onMount(() => inputRef?.focus())
+  onMount(() => {
+    if (props.autoFocus === false) return;
+    inputRef?.focus()
+  })
   return (
     <SearchBarContainer>
       <input
