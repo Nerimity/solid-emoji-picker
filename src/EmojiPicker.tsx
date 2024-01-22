@@ -611,8 +611,7 @@ const Emojis = (props: {
 }
 
 function EmojiImage(props: { size?: number; url: string; index?: number }) {
-
-  const isCustomEmoji = () => props.index === undefined;
+  const isCustomEmoji = () => props.index === undefined
   let styles = () => {
     props.size = props.size || 30
     const properties: JSX.CSSProperties = {
@@ -632,18 +631,14 @@ function EmojiImage(props: { size?: number; url: string; index?: number }) {
     }
 
     if (isCustomEmoji()) {
-      properties['background-position'] = 'center';
+      properties['background-position'] = 'center'
     }
 
     return properties
   }
 
   return (
-    <div
-      style={styles()}
-      class="emojiImage"
-      classList={{ customEmojiImage: isCustomEmoji() }}
-    />
+    <div style={styles()} class="emojiImage" classList={{ customEmojiImage: isCustomEmoji() }} />
   )
 }
 
