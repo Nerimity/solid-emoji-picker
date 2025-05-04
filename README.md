@@ -23,13 +23,12 @@ Use it:
 ```tsx
 import { EmojiPicker } from 'solid-emoji-picker';
 import { emojis } from 'solid-emoji-picker/emojis';
-import { categories } from 'solid-emoji-picker/categories';
 
 
 const App = () => {
   return (
     <div>
-      <EmojiPicker spriteUrl="/emojiSprites.png" categories={categories} emojis={emojis} />
+      <EmojiPicker spriteUrl="/emojiSprites.png" emojis={emojis} />
     </div>
   )
 }
