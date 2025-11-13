@@ -571,7 +571,7 @@ const Emojis = (props: {
         itemSize={{ height: SIZE }}
       >
         {props => (
-          <div style={{ ...props.style, display: 'flex', width: '100%' }}>
+          <div style={{ ...{ ...props.style, width: '100%' }, display: 'flex', width: '100%' }}>
             <For each={props.item}>
               {emoji => (
                 <Switch>
